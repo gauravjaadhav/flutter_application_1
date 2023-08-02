@@ -2,35 +2,62 @@ import 'package:flutter/material.dart';
 
 class BMICalculator extends StatefulWidget {
   @override
-  // ignore: library_private_types_in_public_api
   _BMICalculatorState createState() => _BMICalculatorState();
 }
 
 class _BMICalculatorState extends State<BMICalculator> {
-  TextEditingController weightController = TextEditingController();
-  TextEditingController heightController = TextEditingController();
+  final TextEditingController weightController = TextEditingController();
+  final TextEditingController heightController = TextEditingController();
   double bmi = 0;
 
-  void calculateBMI() {
-    double weight = double.tryParse(weightController.text) ?? 0;
-    double height = double.tryParse(heightController.text) ?? 0;
+  String? weightError;
+  String? heightError;
 
-    if (weight > 0 && height > 0) {
-      setState(() {
+  void calculateBMI() {
+    setState(() {
+      weightError = null;
+      heightError = null;
+
+      double weight = double.tryParse(weightController.text) ?? 0;
+      double height = double.tryParse(heightController.text) ?? 0;
+
+      if (weight <= 0 || weight > 500) {
+        weightError = "Please enter a valid weight in kgs";
+      }
+
+      if (height <= 0 || height > 3) {
+        heightError = "Please enter a valid height in meters";
+      }
+
+      if (weight > 0 && height > 0 && weightError == null && heightError == null) {
         bmi = weight / (height * height);
-      });
-    } else {
-      setState(() {
-        bmi = 0;
-      });
-    }
+      }
+    });
+  }
+
+  void clearWeightError() {
+    setState(() {
+      weightError = null;
+    });
+  }
+
+  void clearHeightError() {
+    setState(() {
+      heightError = null;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+       appBar: AppBar(
         title: Text('BMI Calculator'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context, 0); // Pop the screen and pass the reset value (0) to MyHomePage
+          },
+        ),
       ),
       body: Center(
         child: Padding(
@@ -38,27 +65,33 @@ class _BMICalculatorState extends State<BMICalculator> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TextField(
+              TextFormField(
                 controller: weightController,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(labelText: 'Enter your weight (kg)'),
+                onChanged: (value) => clearWeightError(), // Clear weight error when the user starts typing
+                decoration: InputDecoration(
+                  labelText: 'Enter your weight (kg)',
+                  errorText: weightError,
+                ),
               ),
               SizedBox(height: 16),
-              TextField(
+              TextFormField(
                 controller: heightController,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(labelText: 'Enter your height (m)'),
+                onChanged: (value) => clearHeightError(), // Clear height error when the user starts typing
+                decoration: InputDecoration(
+                  labelText: 'Enter your height (m)',
+                  errorText: heightError,
+                ),
               ),
               SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () {
-                  calculateBMI();
-                },
+                onPressed: calculateBMI,
                 child: Text('Calculate BMI'),
               ),
               SizedBox(height: 16),
               Text(
-                'Your BMI: ${bmi.toStringAsFixed(2)}',
+                bmi == 0 ? 'Your BMI will appear here' : 'Your BMI: ${bmi.toStringAsFixed(2)}',
                 style: TextStyle(fontSize: 24),
               ),
             ],

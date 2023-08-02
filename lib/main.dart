@@ -52,17 +52,33 @@ class _MyHomePageState extends State<MyHomePage> {
               style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
             ),
             ElevatedButton(
-              onPressed: _incrementCounter, // Call the _incrementCounter function
+              onPressed:
+                  _incrementCounter, // Call the _incrementCounter function
               child: Text('Increment'),
             ),
             SizedBox(height: 16),
+            // ElevatedButton(
+            //   onPressed: () {
+            //     // Navigate to BMI Calculator screen
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(builder: (context) => BMICalculator()),
+            //     );
+            //   },
+            //   child: Text('BMI Calculator'),
+            // ),
             ElevatedButton(
-              onPressed: () {
-                // Navigate to BMI Calculator screen
-                Navigator.push(
+              onPressed: () async {
+                // Navigate to BMI Calculator screen and wait for the result (reset value)
+                final resetValue = await Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => BMICalculator()),
                 );
+
+                // Update the counter with the reset value
+                setState(() {
+                  _count = resetValue;
+                });
               },
               child: Text('BMI Calculator'),
             ),
