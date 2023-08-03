@@ -24,7 +24,7 @@ class _BMICalculatorState extends State<BMICalculator> {
       double height = double.tryParse(heightController.text) ?? 0;
 
       if (weight <= 0 || weight > 500) {
-        weightError = "Please enter a valid weight in kgs";
+        weightError = "Please enter a valid weight in kilograms";
       }
 
       if (height <= 0 || height > 3) {
