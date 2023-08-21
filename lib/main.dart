@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'bmi_calculator.dart';
+import 'even_odd.dart';
+import 'api_integration.dart';
 
 void main() {
   runApp(MyApp());
@@ -41,7 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text(
               'Counter:',
@@ -56,17 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   _incrementCounter, // Call the _incrementCounter function
               child: Text('Increment'),
             ),
-            SizedBox(height: 16),
-            // ElevatedButton(
-            //   onPressed: () {
-            //     // Navigate to BMI Calculator screen
-            //     Navigator.push(
-            //       context,
-            //       MaterialPageRoute(builder: (context) => BMICalculator()),
-            //     );
-            //   },
-            //   child: Text('BMI Calculator'),
-            // ),
+            SizedBox(height: 5),
             ElevatedButton(
               onPressed: () async {
                 // Navigate to BMI Calculator screen and wait for the result (reset value)
@@ -82,6 +74,30 @@ class _MyHomePageState extends State<MyHomePage> {
               },
               child: Text('BMI Calculator'),
             ),
+            SizedBox(height: 10),
+            ElevatedButton(
+                onPressed: () async {
+                  final evenValue = await Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => EvenOddScreen()),
+                  );
+                  setState(() {
+                    _count = evenValue;
+                  });
+                },
+                child: Text('Even/Odd')),
+            SizedBox(height: 10),
+            ElevatedButton(
+                onPressed: () async {
+                  final apiIntegration = await Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => APIIntegration()),
+                  );
+                  setState(() {
+                    _count = apiIntegration;
+                  });
+                },
+                child: Text('Api integration'))
           ],
         ),
       ),
